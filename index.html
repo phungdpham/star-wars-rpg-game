@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Star War RGP Game</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Share+Tech+Mono" rel="stylesheet" type="text/css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <!-- jQuery -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Game Logic -->
+    <script type="text/javascript" src="assets/javascript/rpgStarWars.js"></script>
+
+</head>
+<body>
+    <div class="main-section-title">Start Wars RPG!</div>
+    <div class="main-game">
+        <!--displaying available characters to be selected-->
+        <div id="characters-section">
+            <div class="section-title">Select Your Characters</div>
+        </div>
+
+        <!--Displaying selected character-->
+        <div id="selected-character">
+            <div class="section-title">Your Character</div>
+            <!--displaying selected character-->
+            <div id="selected-character"></div>
+        </div>
+
+        <!--displaying characters who are the enemies to attack-->
+        <div id="available-to-attack-section">
+            <div class="section-title">Enemies Available to Attack</div>
+        </div>
+
+        <div class="section-title">Fight Section</div>
+        <div class="fight-section">
+            <button id="attack-button">Attack</button>
+        </div>
+
+        <div id="action">
+            <div class="character-section">
+                <div class="section-title">Defender</div>
+                <!--displaying defender-->
+                <div id="defender"></div>
+            </div>
+        </div>
+
+    </div>
+    <!--Game Messages-->
+    <div id="game-message"></div>
+    
+</body>
+</html>
