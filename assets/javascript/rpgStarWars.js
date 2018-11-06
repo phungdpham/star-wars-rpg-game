@@ -50,10 +50,10 @@ $(document).ready(function() {
     var renderCharacter = function(character, renderArea) {
         var charDiv = $("<div class='character' data-name='" + character.name + "'>");
         var charName = $("<div class='character-name'>").text(character.name);
-        var charImage = $("<img alt='image' class='character-image'>").attr("src", charater.imageUrl);
+        var charImage = $("<img alt='image' class='character-image'>").attr("src", character.imageUrl);
         var charHealth = $("<div class='character-health'>").text(character.health);
         charDiv.append(charName).append(charImage).append(charHealth);
-        $(renderArea).append(chardDiv);
+        $(renderArea).append(charDiv);
     };
 
     //Initializing the game
@@ -110,7 +110,7 @@ $(document).ready(function() {
         var name = $(this).attr('data-name');
 
         //if a player charater has not yet been chosen
-        if (!character) {
+        if (!attacker) {
             attacker = characters[name];
             for (var key in characters) {
                 if (key !== name) {
@@ -120,6 +120,90 @@ $(document).ready(function() {
 
             //Hide the characted select div
             $('#characters-section').hide();
+            //Render the selected and combatants
+            updateCharacter(attacker, '#selected-character');
+            renderEnemies(combatants);
         }
-    })
-})
+    });
+
+    //Create click event for each enemy
+    $('#available-to-attack-section').on('click', '.character', function() {
+        
+        //Saving the opponent's name
+        var name = $(this).attr('data-name');
+
+        //If no defender, the clicked enemey will become the defender
+        if($('#defender').children().length === 0) {
+            defender = characters[name];
+            updateCharacter(defender, '#defender');
+
+            //remove element as it will now be a new defender
+            $(this).remove();
+            clearMessage();
+        }
+    });
+
+    //When you click the atack button, run the follow game logic...
+    $('#attack-button').on('click', function() {
+        //If there is a defender, combat will occur
+        if($('#defender').children().length !==0) {
+            //Create message for the attack and the opponents counter attack
+            var attackMessage = 'You attacked ' + defender.name + ' for ' + attacker.attack * turnCounter + ' damage.';
+            var counterAttackMessage = defender.name + ' attacked you back for ' + defender.enemyAttackBack + ' damage.';
+            clearMessage();
+
+            //Reduce defender's health by your attack value
+            defender.health -= attacker.attack * turnCounter;
+
+            //If the enemy still has health
+            if (defender.health > 0) {
+                //Render the enemy's updated character card
+                updateCharacter(defender, '#defender');
+
+                //Render the combat message
+                renderMessage(attackMessage);
+                renderMessage(counterAttackMessage);
+
+                // Reduce your health by the opponent's attack value
+                attacker.health -= defender.enemyAttackBack;
+
+                //Render the player's updated character card
+                updateCharacter(attacker, '#selected-character');
+
+                //If you have less than zero health the game ends
+                //we call the restart game function to allow the user to restart the game & play again
+                if (attacker.health <=0) {
+                    clearMessage();
+                    restartGame('You have been defeated...GameOver!!!');
+                    $('#attack-button').off('click');
+                }
+            }
+            else {
+                //If the enemy has less than zero health they are defeated
+                //Remove your opponent's character card
+                $('#defender').empty();
+                var gameStateMessage = 'You have defeated ' + defender.name + ', you can choose to fight another enemy';
+                renderMessage(gameStateMessage);
+
+                //Increment your kill count
+                killCount++;
+
+                //If you have killed all of your opponents you win
+                //Call the restartGame function to allow the user to restart the game and play again
+                if (killCount >= combatants.length) {
+                    clearMessage();
+                    $('attack-button').off('click');
+                    restartGame('You won!!!! GAME OVER');
+                }
+            }
+
+            //Increment turn counter. This is used for determining how much damage the player does
+            turnCounter++;
+        }
+        else {
+            //if there is no defender, render an error message
+            clearMessage();
+            renderMessage('No enemy here.');
+        }
+    });
+});
