@@ -27,7 +27,7 @@ $(document).ready(function() {
             enemyAttackBack: 20
         },
         'Darth Maul': {
-            name: 'Dark Maul',
+            name: 'Darth Maul',
             health: 180,
             attack: 7,
             imageUrl: 'assets/images/darth-maul.jpg',
